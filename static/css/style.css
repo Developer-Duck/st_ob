@@ -1,0 +1,125 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: 'Paperlogy-8ExtraBold';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    color: #333;
+}
+
+.wrap {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: rgb(53, 57, 101);
+}
+
+.camera_area {
+    width: calc(100% - 350px);
+    height: 100%;
+    background-color: rgb(53, 57, 101);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+#camera-stream {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.ob_list {
+    border-top-left-radius: 25px ;
+    border-bottom-left-radius: 25px ;
+    width: 350px;
+    height: 100%;
+    background-color: rgb(59, 63, 110);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border: 1px solid black; */
+}
+
+.list {
+    
+    border-top-left-radius: 25px ;
+    height: 85%;
+    width: 100%;
+    background-color: rgb(59, 63, 110);
+    
+}
+
+.list h1 {
+    font-family: 'Paperlogy-8ExtraBold';
+    color: white;
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    height: 100px;
+    line-height: 100px;
+    /* border: 1px solid black; */
+}
+
+.list_show {
+    width: 100%;
+    height: calc(100% - 100px);
+    text-align: center;
+    /* padding: 15px 0px 15px 0px; */
+    overflow: scroll;
+
+}
+.list_show::-webkit-scrollbar{
+    display: none;
+}
+
+.list_show > p {
+    /* color: rgb(238, 238, 238); */
+    margin: 25px 0px 25px 0px;
+    font-weight: bold;
+}
+.object_txt{
+    color: rgb(238, 238, 238);
+}
+
+.list_show > p > .number {
+    color: rgb(238, 238, 238);
+    margin: 0px 30px 0px 0px;
+}
+
+.list_show > p > .m {
+    color: rgb(238, 238, 238);
+    margin: 0px 0px 0px 30px;
+}
+
+.ob_tr_st {
+    border-bottom-left-radius: 25px ;
+    background-color: rgb(59, 63, 110);
+    /* border: 1px solid black; */
+    height: 15%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ob_tr_st button {
+    width: 85%;
+    height: 50px;
+    border-radius: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: rgb(255, 104, 73);
+    color: white;
+    border: none;
+}
+.ob_tr_st button:hover{
+    background-color: rgb(255, 87, 53);
+}

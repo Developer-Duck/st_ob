@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="icon" href="../image/icon.png">
+    <title>VisionAid</title>
+    <style>
+        @charset "utf-8";
+
+        @font-face {
+            font-family: 'Paperlogy-8ExtraBold';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            color: #333;
+        }
+
+        .wrap {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            background-color: rgb(53, 57, 101);
+        }
+
+        .camera_area {
+            width: calc(100% - 350px);
+            height: 100%;
+            background-color: rgb(53, 57, 101);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #camera-stream {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ob_list {
+            border-top-left-radius: 25px ;
+            border-bottom-left-radius: 25px ;
+            width: 350px;
+            height: 100%;
+            background-color: rgb(59, 63, 110);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .list {
+            border-top-left-radius: 25px ;
+            height: 85%;
+            width: 100%;
+            background-color: rgb(59, 63, 110);
+        }
+
+        .list h1 {
+            font-family: 'Paperlogy-8ExtraBold';
+            color: white;
+            width: 100%;
+            text-align: center;
+            font-size: 25px;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        .list_show {
+            width: 100%;
+            height: calc(100% - 100px);
+            text-align: center;
+            overflow: scroll;
+        }
+
+        .list_show::-webkit-scrollbar {
+            display: none;
+        }
+
+        .list_show > p {
+            margin: 25px 0px;
+            font-weight: bold;
+        }
+
+        .object_txt {
+            color: rgb(238, 238, 238);
+        }
+
+        .list_show > p > .number {
+            color: rgb(238, 238, 238);
+            margin: 0px 30px 0px 0px;
+        }
+
+        .list_show > p > .m {
+            color: rgb(238, 238, 238);
+            margin: 0px 0px 0px 30px;
+        }
+
+        .ob_tr_st {
+            border-bottom-left-radius: 25px ;
+            background-color: rgb(59, 63, 110);
+            height: 15%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ob_tr_st button {
+            width: 85%;
+            height: 50px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: rgb(255, 104, 73);
+            color: white;
+            border: none;
+        }
+
+        .ob_tr_st button:hover {
+            background-color: rgb(255, 87, 53);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="camera_area">
+            <!-- 서버 카메라 스트림 -->
+            <img id="camera-stream" src="{{ url_for('video_feed') }}" alt="Camera Stream">
+        </div>
+        <div class="ob_list">
+            <div class="list">
+                <h1>현재 인식되는 객체</h1>
+                <div class="list_show">
+                    <p><span class="number">1.</span><span class="object_txt" id="object1">객체1</span><span class="m" id="distance1">0m</span></p>
+                    <p><span class="number">2.</span><span class="object_txt" id="object2">객체2</span><span class="m" id="distance2">0m</span></p>
+                    <p><span class="number">3.</span><span class="object_txt" id="object3">객체3</span><span class="m" id="distance3">0m</span></p>
+                    <p><span class="number">4.</span><span class="object_txt" id="object4">객체4</span><span class="m" id="distance4">0m</span></p>
+                    <p><span class="number">5.</span><span class="object_txt" id="object5">객체5</span><span class="m" id="distance5">0m</span></p>
+                </div>
+                               
+            </div>
+            <div class="ob_tr_st">
+                <button id="start">Start</button>
+                <button id="end" style="display:none;">End</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('start');
+            const endButton = document.getElementById('end');
+            const cameraStream = document.getElementById('camera-stream');
+
+            function showCameraStream() {
+                cameraStream.style.display = 'block'; // 카메라 스트림 보이기
+                startButton.style.display = 'none';
+                endButton.style.display = 'inline';
+
+                // 객체 인식 시작 요청
+                fetch('/start_detection', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+
+                // 음성 인식 시작 요청
+                fetch('/start_voice', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+            }
+
+            function hideCameraStream() {
+                cameraStream.style.display = 'none'; // 카메라 스트림 숨기기
+                startButton.style.display = 'inline';
+                endButton.style.display = 'none';
+
+                // 객체 인식 종료 요청
+                fetch('/stop_detection', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+
+                // 음성 인식 종료 요청
+                fetch('/stop_voice', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+            }
+
+            startButton.addEventListener('click', showCameraStream);
+            endButton.addEventListener('click', hideCameraStream);
+        });
+
+        setInterval(() => {
+    fetch('/get_top_objects')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('object1').innerText = data[0].label || '없음';
+            document.getElementById('distance1').innerText = (data[0].distance || '0') + 'm';
+            document.getElementById('object2').innerText = data[1].label || '없음';
+            document.getElementById('distance2').innerText = (data[1].distance || '0') + 'm';
+            document.getElementById('object3').innerText = data[2].label || '없음';
+            document.getElementById('distance3').innerText = (data[2].distance || '0') + 'm';
+            document.getElementById('object4').innerText = data[3].label || '없음';
+            document.getElementById('distance4').innerText = (data[3].distance || '0') + 'm';
+            document.getElementById('object5').innerText = data[4].label || '없음';
+            document.getElementById('distance5').innerText = (data[4].distance || '0') + 'm';
+        })
+        .catch(error => console.error('Error:', error));
+}, 500);
+
+    </script>
+</body>
+</html>

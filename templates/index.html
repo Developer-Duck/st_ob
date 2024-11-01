@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <title>객체 인식 카메라</title>
+</head>
+<body>
+    <div class="wrap">
+        <div class="camera_area">
+            <video id="camera-stream" autoplay></video>
+        </div>
+        <div class="ob_list">
+            <div class="list">
+                <h1>현재 인식되는 객체</h1>
+                <div class="list_show">
+                    <p><span class="number">1.</span>자전거<span class="m">24m</span></p>
+                </div>
+            </div>
+            <div class="ob_tr_st">
+                <button id="start">Start</button>
+                <button id="end" style="display:none;">End</button>
+            </div>
+        </div>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>
